@@ -607,11 +607,10 @@ public:
     * @param format Format as printf
     * @return Char string built from current time
     */
-    char* getTimeDateString (timeval moment, const char* format = "%02d/%02m/%04Y %02H:%02M:%02S") {
+    char* getTimeDateString (timeval moment, const char* format = "%Y-%m-%dT%H:%M:%S") {
         tm* local_tm = localtime (&moment.tv_sec);
         size_t index = strftime (strBuffer, sizeof (strBuffer), format, local_tm);
-        index += snprintf (strBuffer + index, sizeof (strBuffer) - index, ".%06ld", moment.tv_usec);
-        strftime (strBuffer + index, sizeof (strBuffer) - index, " %Z", local_tm);
+        index += snprintf (strBuffer + index, sizeof (strBuffer) - index, ".%06ldZ", moment.tv_usec);
         return strBuffer;
     }
 
@@ -621,7 +620,7 @@ public:
     * @param format Format as printf
     * @return Char string built from current time
     */
-    char* getTimeDateString (time_t moment, const char* format = "%02d/%02m/%04Y %02H:%02M:%02S") {
+    char* getTimeDateString (time_t moment, const char* format = "%Y-%m-%dT%H:%M:%S") {
         tm* local_tm = localtime (&moment);
         strftime (strBuffer, sizeof (strBuffer), format, local_tm);
 
