@@ -588,7 +588,9 @@ public:
     * @return Char string built from current time
     */
     char* getTimeDateStringUs () {
-        return getTimeDateString (time (NULL), "%Y-%m-%dT%H:%M:%S");
+        timeval currentTime;
+        gettimeofday (&currentTime, NULL);
+        return getTimeDateString (currentTime);
     }
     
     /**
@@ -608,7 +610,8 @@ public:
     char* getTimeDateString (timeval moment, const char* format = "%02d/%02m/%04Y %02H:%02M:%02S") {
         tm* local_tm = localtime (&moment.tv_sec);
         size_t index = strftime (strBuffer, sizeof (strBuffer), format, local_tm);
-        index += snprintf (strBuffer + index, sizeof (strBuffer) - index, ".%06dZ", moment.tv_usec);
+        index += snprintf (strBuffer + index, sizeof (strBuffer) - index, ".%06ld", moment.tv_usec);
+        strftime (strBuffer + index, sizeof (strBuffer) - index, " %Z", local_tm);
         return strBuffer;
     }
 
